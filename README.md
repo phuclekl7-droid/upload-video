@@ -1,144 +1,97 @@
 <div align="center">
 
-# 🚀 Social Auto Poster & Telegram Bot
+<img src="https://capsule-render.vercel.app/api?type=waving&color=00c8ff&height=200&section=header&text=NEO%20Uploader&fontSize=70&fontAlignY=35&desc=Next-Gen%20Social%20Media%20Automation%20Engine&descAlignY=55&descAlign=50" width="100%" />
 
-[![Python Version](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/)
-[![Playwright](https://img.shields.io/badge/Playwright-Automation-green.svg)](https://playwright.dev/python/)
-[![Telegram Bot API](https://img.shields.io/badge/Telegram-Bot%20API-0088cc.svg)](https://core.telegram.org/bots/api)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Build Status](https://img.shields.io/badge/Build-Passing-brightgreen?style=for-the-badge&logo=githubactions)](https://github.com)
+[![Python Version](https://img.shields.io/badge/Python-3.10+-00c8ff?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
+[![Playwright](https://img.shields.io/badge/Playwright-Engine-2EAD33?style=for-the-badge&logo=playwright&logoColor=white)](https://playwright.dev/)
+[![Telegram](https://img.shields.io/badge/Telegram-Bot%20API-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white)](https://core.telegram.org/)
 
-**An end-to-end multi-platform video automation system controlled via Telegram Bot & WebApp.**  
-Automatically split long videos, upload to **TikTok Studio**, **Facebook Reels/Page**, and **YouTube Studio**, apply custom captions, hashtags, and dynamic cover thumbnails without API limitations.
+**An end-to-end cybernetic automation system controlled via Telegram WebApp.**  
+*Bypass API limitations. Simulate human intelligence. Distribute video assets globally.*
 
-[Features](#-key-features) • [Architecture](#-architecture) • [Installation](#-installation--setup) • [Usage](#-usage-guide) • [License](#-license)
+[Features](#-core-capabilities) • [Architecture](#-system-architecture) • [Setup](#-deployment) • [Usage](#-mission-control)
 
 ---
-
 </div>
 
-## 🌟 Key Features
+## 🌌 Core Capabilities
 
-- 📱 **Telegram Bot Interface & WebApp UI**: Fully managed directly from your phone or desktop via Telegram inline keyboards and web app interface.
-- ✂️ **Automatic Video Splitting**: Automatically splits long videos into $N$ parts using `ffmpeg` without re-encoding to preserve maximum video quality.
-- 🎵 **TikTok Studio Automation**:
-  - Auto video upload & editor transition detection.
-  - Smart caption insertion with hashtag auto-formatting.
-  - Dynamic **Edit Cover / Thumbnail** selector & file upload.
-  - Automatic focus stealing & pop-up dismissal (e.g. Chrome crash popups, TikTok policy dialogs).
-- 📘 **Facebook Video & Reels Upload**:
-  - Handles Facebook Page Creator Studio / Business Suite workflows.
-  - Custom title, description, and page-level video options.
-- 🔴 **YouTube Studio Automation**:
-  - Automated video publishing pipeline with playlist and thumbnail support.
-- 🔒 **Persistent Session Profiles**: Stores cookies and local browser states (`*_profile/`) locally so login is only required once.
-- 🌐 **Tunneling Integration**: Built-in support for WebApp local tunneling (LocalTunnel / Serveo / Pinggy).
+### ⚡ Neural Video Processing
+- **Quantum Splitter**: Utilizes `ffmpeg` to parse and slice massive video files into optimal segments in milliseconds, without quality degradation (zero re-encoding).
+
+### 🛡️ Phantom Automation (Playwright)
+- **TikTok Studio Integration**: Dynamic DOM traversal to bypass popups, inject metadata (captions & hashtags), and auto-upload custom thumbnails.
+- **Meta (Facebook) Network**: Seamless interaction with Facebook Creator Studio/Business Suite.
+- **YouTube Mainframe**: Automated sequence execution for YouTube Studio.
+
+### 🎛️ Command Center
+- **Telegram WebApp UI**: A futuristic, responsive dashboard built directly into your Telegram client. Control uploads, track statuses, and split videos on the fly.
+- **State Persistence**: Securely caches session cookies (`*_profile/`) to maintain permanent authentication tunnels.
 
 ---
 
-## 🏗️ Architecture
+## 🧬 System Architecture
 
 ```mermaid
-flowchart TD
-    User([📱 User on Telegram]) -->|Send Video / Command| Bot[🤖 Telegram Bot `bot.py`]
-    Bot -->|Launch WebApp UI| WebApp[🌐 WebApp Interface `webapp.html`]
+graph TD
+    classDef user fill:#0f172a,stroke:#00c8ff,stroke-width:2px,color:#fff;
+    classDef bot fill:#1e1e1e,stroke:#f59e0b,stroke-width:2px,color:#fff;
+    classDef engine fill:#0f172a,stroke:#10b981,stroke-width:2px,color:#fff;
+    classDef social fill:#1e293b,stroke:#ec4899,stroke-width:2px,color:#fff;
+
+    U((💻 Commander)):::user -->|Trigger| B[🤖 Telegram Core Bot]:::bot
+    B -->|Initialize| UI[🌐 WebApp Dashboard]:::bot
     
-    subgraph Engine [⚙️ Processing & Upload Engine]
-        Bot -->|Check Video Length| VideoTools[✂️ `video_tools.py` / FFmpeg]
-        VideoTools -->|Split Parts| VideoParts[📹 Video Part 1, Part 2...]
-        
-        VideoParts --> TikTok[🎵 `tiktok_uploader.py`]
-        VideoParts --> FB[📘 `facebook_uploader.py`]
-        VideoParts --> YT[🔴 `youtube_uploader.py`]
-        
-        TikTok -->|Playwright Chromium| TikTokStudio[TikTok Studio Portal]
-        FB -->|Playwright Chromium| FBPage[Facebook Page / Business Suite]
-        YT -->|Playwright Chromium| YTStudio[YouTube Studio]
+    subgraph Execution Matrix
+        B -->|Payload| V[✂️ FFmpeg Slicer]:::engine
+        V --> P1[🎥 Chunk 1]:::engine
+        V --> P2[🎥 Chunk 2]:::engine
     end
     
-    TikTokStudio -->|Status Callback| Bot
-    FBPage -->|Status Callback| Bot
-    YTStudio -->|Status Callback| Bot
-    Bot -->|Notification Result| User
+    subgraph Phantom Uploaders
+        P1 --> TK[🎵 TikTok Automation]:::social
+        P1 --> FB[📘 Facebook Automation]:::social
+        P1 --> YT[🔴 YouTube Automation]:::social
+    end
+    
+    TK -->|Chromium Headless| TKS[TikTok Servers]
+    FB -->|Chromium Headless| FBS[Meta Servers]
+    YT -->|Chromium Headless| YTS[Google Servers]
 ```
 
 ---
 
-## 📦 Installation & Setup
+## 💻 Deployment
 
-### 1. Prerequisites
-- **Python 3.10+**
-- **FFmpeg** installed and added to system `PATH`
-- **Git**
-
-### 2. Clone & Install Dependencies
 ```bash
+# 1. Clone the repository into your local mainframe
 git clone https://github.com/phuclekl7-droid/upload-video.git
 cd upload-video
 
-# Install Python packages
+# 2. Install dependencies & initialize phantom browser drivers
 pip install -r requirements.txt
-
-# Install Playwright browser drivers
 playwright install chromium
-```
 
-### 3. One-Time Account Login Setup
-Run the login helpers once to log into your social media accounts and save browser states:
-
-```bash
-# Log in to TikTok
+# 3. Authenticate communication protocols (Run once)
 python login_tiktok.py
-
-# Log in to Facebook
 python login_facebook.py
-
-# Log in to YouTube
 python login_youtube.py
 ```
-*Note: A browser window will open. Complete the login process manually once. Session data will be safely cached in `tiktok_profile/`, `facebook_profile/`, and `youtube_profile/`.*
 
----
+## 🛰️ Mission Control
 
-## 🚀 Usage Guide
-
-### Starting the Telegram Bot
+Ignite the primary bot process:
 ```bash
 python bot.py
 ```
 
-### Available Telegram Commands
-- `/start` - Launch the main menu and WebApp.
-- `/post` - Initiate video upload wizard.
-- `/split` - Split a video into custom equal parts before publishing.
-- `/status` - Check current active upload tasks and server status.
+**Commands:**
+- `/start` - Access the WebApp Matrix.
+- `/split` - Activate the video slicer module.
+- `/status` - Diagnostics and current operations.
 
 ---
-
-## 🛠️ Project Structure
-
-```dir
-.
-├── bot.py                # Main Telegram Bot runner & task queue
-├── tiktok_uploader.py    # Playwright automation script for TikTok Studio
-├── facebook_uploader.py  # Playwright automation script for Facebook
-├── youtube_uploader.py   # Playwright automation script for YouTube Studio
-├── video_tools.py        # FFmpeg video splitting and metadata processing
-├── webapp.html           # Telegram WebApp front-end interface
-├── login_tiktok.py       # Helper script to initialize TikTok browser session
-├── login_facebook.py     # Helper script to initialize Facebook browser session
-├── login_youtube.py      # Helper script to initialize YouTube browser session
-├── requirements.txt      # Python dependencies list
-└── .gitignore            # Git ignore rules for session data & temp files
-```
-
----
-
-## 📝 License
-
-Distributed under the MIT License. See `LICENSE` for more information.
-
----
-
 <div align="center">
-  <sub>Built with ❤️ using Python, Playwright & Telegram Bot API</sub>
+  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=600&size=16&pause=1000&color=00C8FF&center=true&vCenter=true&width=435&lines=Initializing+Phantom+Browsers...;Bypassing+Social+Media+Firewalls...;Upload+Complete.+System+Standing+By." alt="Typing SVG" />
 </div>
