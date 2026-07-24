@@ -93,5 +93,5 @@ python bot.py
 
 ---
 <div align="center">
-  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=600&size=16&pause=1000&color=00C8FF;FF0050;10B981&center=true&vCenter=true&width=600&lines=Initializing+PhamThuw+Protocol...;Yêu+Minh+Thư+Matrix+Activated...;Upload+Complete.+System+Standing+By." alt="Typing SVG" />
+  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=600&size=16&pause=1000&center=true&vCenter=true&width=600&color=00C8FF&color=FF0050&color=10B981&lines=Initializing+PhamThuw+Protocol...&lines=Y%C3%AAu+Minh+Th%C6%B0+Matrix+Activated...&lines=Upload+Complete.+System+Standing+By." alt="Typing SVG" />
 </div>
