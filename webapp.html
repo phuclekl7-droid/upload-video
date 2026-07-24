@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Poster Mini App</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0f0f13;
+            --surface: rgba(25, 25, 30, 0.7);
+            --border: rgba(255, 255, 255, 0.1);
+            --primary: #6c5ce7;
+            --primary-glow: rgba(108, 92, 231, 0.4);
+            --accent: #00cec9;
+            --text-main: #ffffff;
+            --text-dim: #a0a0a5;
+            --success: #00b894;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Outfit', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(108, 92, 231, 0.15), transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(0, 206, 201, 0.1), transparent 25%);
+            background-attachment: fixed;
+        }
+
+        .header {
+            padding: 24px 20px;
+            text-align: center;
+            background: linear-gradient(180deg, rgba(15,15,19,1) 0%, rgba(15,15,19,0) 100%);
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #fff, #a0a0a5);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        .header p {
+            color: var(--text-dim);
+            font-size: 14px;
+            font-weight: 300;
+        }
+
+        .container {
+            padding: 0 20px 100px;
+            flex: 1;
+        }
+
+        .glass-panel {
+            background: var(--surface);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 24px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+
+        .glass-panel:hover {
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .panel-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .video-stats {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            margin-bottom: 10px;
+        }
+
+        .stat-circle {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: conic-gradient(var(--primary) 0%, var(--accent) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 20px var(--primary-glow);
+            position: relative;
+        }
+
+        .stat-circle::after {
+            content: '';
+            position: absolute;
+            inset: 4px;
+            background: var(--bg-color);
+            border-radius: 50%;
+        }
+
+        .stat-content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+        }
+
+        .stat-num {
+            font-size: 24px;
+            font-weight: 800;
+        }
+
+        .stat-label {
+            font-size: 10px;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .option-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 16px 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .option-card input[type="radio"] {
+            display: none;
+        }
+
+        .option-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 0;
+        }
+
+        .option-card.active {
+            border-color: transparent;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(108, 92, 231, 0.2);
+        }
+
+        .option-card.active::before {
+            opacity: 1;
+        }
+
+        .card-content {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card-icon {
+            font-size: 24px;
+        }
+
+        .card-title {
+            font-size: 13px;
+            font-weight: 600;
+        }
+        
+        .card-subtitle {
+            font-size: 10px;
+            color: rgba(255,255,255,0.7);
+        }
+
+        /* Schedule toggle */
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .toggle-label {
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 28px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            inset: 0;
+            background-color: rgba(255, 255, 255, 0.1);
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--primary);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(22px);
+        }
+
+        .schedule-inputs {
+            display: none;
+            animation: slideDown 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        .schedule-inputs.visible {
+            display: block;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .input-group {
+            margin-top: 12px;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 12px;
+            color: var(--text-dim);
+            margin-bottom: 6px;
+        }
+
+        .modern-input {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border);
+            color: white;
+            padding: 14px 16px;
+            border-radius: 12px;
+            font-size: 15px;
+            font-family: inherit;
+            outline: none;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .modern-input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px rgba(0, 206, 201, 0.2);
+        }
+
+        .btn-submit {
+            position: fixed;
+            bottom: 24px;
+            left: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 16px;
+            font-size: 16px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            cursor: pointer;
+            box-shadow: 0 10px 20px var(--primary-glow);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            z-index: 10;
+        }
+
+        .btn-submit:active {
+            transform: scale(0.98);
+        }
+        
+        .btn-submit:disabled {
+            background: rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.3);
+            box-shadow: none;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>Auto Poster Pro</h1>
+        <p>Kiểm soát quy trình đăng video</p>
+    </div>
+
+    <div class="container">
+        
+        <div class="glass-panel">
+            <div class="video-stats">
+                <div class="stat-circle">
+                    <div class="stat-content">
+                        <div class="stat-num" id="videoCount">0</div>
+                        <div class="stat-label">Videos</div>
+                    </div>
+                </div>
+                <div style="flex: 1;">
+                    <h3 style="font-size: 16px; margin-bottom: 4px;">Sẵn sàng đăng!</h3>
+                    <p style="font-size: 12px; color: var(--text-dim);">Hệ thống đã nhận diện được file trong thư mục. Tên file sẽ được tự động chuyển thành Caption.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="glass-panel">
+            <div class="panel-title">
+                <span style="font-size: 20px;">🎯</span> Chọn nền tảng đăng tải
+            </div>
+            <div class="options-grid">
+                <div class="option-card" data-val="tiktok" onclick="selectPlatform(this)">
+                    <div class="card-content">
+                        <div class="card-icon">🎵</div>
+                        <div class="card-title">Chỉ TikTok</div>
+                    </div>
+                </div>
+                <div class="option-card" data-val="facebook" onclick="selectPlatform(this)">
+                    <div class="card-content">
+                        <div class="card-icon">📘</div>
+                        <div class="card-title">Chỉ Facebook</div>
+                    </div>
+                </div>
+                <div class="option-card" data-val="youtube_public" onclick="selectPlatform(this)">
+                    <div class="card-content">
+                        <div class="card-icon">🔴</div>
+                        <div class="card-title">Chỉ YouTube</div>
+                        <div class="card-subtitle">Công khai</div>
+                    </div>
+                </div>
+                <div class="option-card" data-val="youtube_unlisted" onclick="selectPlatform(this)">
+                    <div class="card-content">
+                        <div class="card-icon">🔒</div>
+                        <div class="card-title">Chỉ YouTube</div>
+                        <div class="card-subtitle">Không công khai</div>
+                    </div>
+                </div>
+                <div class="option-card" data-val="all_public" onclick="selectPlatform(this)">
+                    <div class="card-content">
+                        <div class="card-icon">🚀</div>
+                        <div class="card-title">Tất cả</div>
+                        <div class="card-subtitle">YT Công khai</div>
+                    </div>
+                </div>
+                <div class="option-card" data-val="all_unlisted" onclick="selectPlatform(this)">
+                    <div class="card-content">
+                        <div class="card-icon">🚀</div>
+                        <div class="card-title">Tất cả</div>
+                        <div class="card-subtitle">YT Không công khai</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="glass-panel">
+            <div class="toggle-container">
+                <div class="toggle-label">
+                    <span style="margin-right: 8px; font-size: 18px;">🔪</span> Chế độ Cắt Video
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="splitToggle" onchange="toggleSplit()">
+                    <span class="slider"></span>
+                </label>
+            </div>
+            
+            <div class="schedule-inputs" id="splitInputs">
+                <p style="font-size: 12px; color: var(--text-dim); margin-bottom: 12px;">Chia video gốc thành nhiều phần nhỏ (Tự động xoá phần nhỏ sau khi đăng xong).</p>
+                <div class="input-group">
+                    <label>Số phần muốn cắt</label>
+                    <input type="number" id="splitPartsInput" class="modern-input" value="5" min="2" max="20">
+                </div>
+            </div>
+        </div>
+
+        <div class="glass-panel">
+            <div class="toggle-container">
+                <div class="toggle-label">
+                    <span style="margin-right: 8px; font-size: 18px;">⏳</span> Hẹn giờ đăng tải
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="scheduleToggle" onchange="toggleSchedule()">
+                    <span class="slider"></span>
+                </label>
+            </div>
+            
+            <div class="schedule-inputs" id="scheduleInputs">
+                <p style="font-size: 12px; color: var(--text-dim); margin-bottom: 12px;">Đăng vào lúc nào? Bỏ qua ngày tháng nếu muốn đăng hôm nay.</p>
+                <div class="input-group">
+                    <label>Giờ (HH:MM)</label>
+                    <input type="time" id="timeInput" class="modern-input">
+                </div>
+                <div class="input-group">
+                    <label>Ngày (Tùy chọn - DD/MM)</label>
+                    <input type="text" id="dateInput" class="modern-input" placeholder="Ví dụ: 25/10">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <button class="btn-submit" id="submitBtn" onclick="submitData()" disabled>
+        <span>BẮT ĐẦU ĐĂNG</span>
+        <span style="font-size: 20px;">⚡</span>
+    </button>
+
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.expand(); // Mo full man hinh
+        
+        let selectedPlatform = null;
+        
+        // Doc so luong video tu URL param
+        const urlParams = new URLSearchParams(window.location.search);
+        const count = urlParams.get('count') || '0';
+        document.getElementById('videoCount').innerText = count;
+
+        if (count === '0') {
+            document.getElementById('submitBtn').innerHTML = "THƯ MỤC TRỐNG ⚠️";
+        }
+
+        function selectPlatform(card) {
+            // Remove active from all
+            document.querySelectorAll('.option-card').forEach(c => c.classList.remove('active'));
+            // Add active to selected
+            card.classList.add('active');
+            selectedPlatform = card.getAttribute('data-val');
+            
+            checkSubmitState();
+        }
+
+        function toggleSchedule() {
+            const toggle = document.getElementById('scheduleToggle').checked;
+            const inputs = document.getElementById('scheduleInputs');
+            if(toggle) {
+                inputs.classList.add('visible');
+                // Set current time + 1 hour as default
+                const now = new Date();
+                now.setHours(now.getHours() + 1);
+                const h = String(now.getHours()).padStart(2, '0');
+                const m = String(now.getMinutes()).padStart(2, '0');
+                document.getElementById('timeInput').value = `${h}:${m}`;
+            } else {
+                inputs.classList.remove('visible');
+            }
+            checkSubmitState();
+        }
+
+        function toggleSplit() {
+            const toggle = document.getElementById('splitToggle').checked;
+            const inputs = document.getElementById('splitInputs');
+            if(toggle) {
+                inputs.classList.add('visible');
+            } else {
+                inputs.classList.remove('visible');
+            }
+        }
+
+        function checkSubmitState() {
+            const btn = document.getElementById('submitBtn');
+            const toggle = document.getElementById('scheduleToggle').checked;
+            const time = document.getElementById('timeInput').value;
+            
+            if (count === '0') {
+                btn.disabled = true;
+                return;
+            }
+
+            if (!selectedPlatform) {
+                btn.disabled = true;
+                return;
+            }
+
+            if (toggle && !time) {
+                btn.disabled = true;
+                return;
+            }
+
+            btn.disabled = false;
+        }
+
+        function submitData() {
+            if (document.getElementById('submitBtn').disabled) return;
+            
+            const isSchedule = document.getElementById('scheduleToggle').checked;
+            const isSplit = document.getElementById('splitToggle').checked;
+            let timeStr = "";
+            let splitParts = 5;
+            
+            if (isSchedule) {
+                const time = document.getElementById('timeInput').value;
+                const date = document.getElementById('dateInput').value;
+                if (date) {
+                    timeStr = `${time} ${date}`;
+                } else {
+                    timeStr = time;
+                }
+            }
+
+            if (isSplit) {
+                splitParts = parseInt(document.getElementById('splitPartsInput').value) || 5;
+            }
+            
+            const data = {
+                platform: selectedPlatform,
+                schedule: isSchedule,
+                time: timeStr,
+                split: isSplit,
+                splitParts: splitParts
+            };
+            
+            tg.sendData(JSON.stringify(data));
+        }
+        
+        // Notify telegram that app is ready
+        tg.ready();
+    </script>
+</body>
+</html>

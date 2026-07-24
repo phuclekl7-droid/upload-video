@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+
+# Profiles & Sessions
+tiktok_profile/
+facebook_profile/
+youtube_profile/
+downloads/
+
+# Cloned repos & temporary test files
+social-auto-upload/
+*.log
+direct_log*.txt
+lt.txt
+msgs*.txt
+pinggy_out.txt
+pipeline_log.txt
+*.png
+*.jpg
+*.mp4
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
