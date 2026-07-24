@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="https://capsule-render.vercel.app/api?type=waving&color=00c8ff&height=200&section=header&text=NEO%20Uploader&fontSize=70&fontAlignY=35&desc=Next-Gen%20Social%20Media%20Automation%20Engine&descAlignY=55&descAlign=50" width="100%" />
+<img src="https://capsule-render.vercel.app/api?type=waving&color=00c8ff&height=200&section=header&text=Yêu%20Minh%20Thư&fontSize=80&fontAlignY=35&desc=PhamThuw%20Matrix%20-%20Next-Gen%20Automation%20Engine&descAlignY=55&descAlign=50&animation=twinkling" width="100%" />
 
 [![Build Status](https://img.shields.io/badge/Build-Passing-brightgreen?style=for-the-badge&logo=githubactions)](https://github.com)
 [![Python Version](https://img.shields.io/badge/Python-3.10+-00c8ff?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
@@ -93,5 +93,5 @@ python bot.py
 
 ---
 <div align="center">
-  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=600&size=16&pause=1000&color=00C8FF&center=true&vCenter=true&width=435&lines=Initializing+Phantom+Browsers...;Bypassing+Social+Media+Firewalls...;Upload+Complete.+System+Standing+By." alt="Typing SVG" />
+  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=600&size=16&pause=1000&color=00C8FF;FF0050;10B981&center=true&vCenter=true&width=600&lines=Initializing+PhamThuw+Protocol...;Yêu+Minh+Thư+Matrix+Activated...;Upload+Complete.+System+Standing+By." alt="Typing SVG" />
 </div>
